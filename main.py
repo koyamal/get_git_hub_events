@@ -27,7 +27,6 @@ def count_today_push_events(events):
                 output += 1
             else:
                 return output
-                break
     return output
 
 
@@ -42,4 +41,3 @@ if __name__ == "__main__":
     numTodayPushEvents = count_today_push_events(publicEventsForUser)
 
     print(numTodayPushEvents)
-
