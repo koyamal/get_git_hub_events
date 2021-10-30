@@ -42,3 +42,4 @@ if __name__ == "__main__":
     numTodayPushEvents = count_today_push_events(publicEventsForUser)
 
     print(numTodayPushEvents)
+
