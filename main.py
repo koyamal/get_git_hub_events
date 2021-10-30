@@ -2,12 +2,15 @@ import requests
 import datetime
 
 
-class MethodBox():
+class MethodBox:
+    def __init__(self, username):
+        self.username = username
+
     CommonUrl = "https://api.github.com"
     Accept = "application/vnd.github.v3+json"
 
-    def get_public_events_for_a_user(self, username):
-        url = self.CommonUrl + "/users/" + username + "/events/public?per_page=100"
+    def get_public_events_for_a_user(self):
+        url = self.CommonUrl + "/users/" + self.username + "/events/public?per_page=100"
         headers = {
             "Accept": self.Accept
         }
@@ -17,7 +20,13 @@ class MethodBox():
 
         return data
 
-    def count_today_push_events(self, events):
+    def to_jst_from_utc(self, iso8601):
+        d = datetime.datetime.fromisoformat(iso8601.replace("Z", "+00:00"))
+        d += datetime.timedelta(hours=9)
+        return d
+
+    def count_today_push_events(self):
+        events = self.get_public_events_for_a_user()
         today = datetime.datetime.today()
         output = 0
         for event in events:
@@ -34,15 +43,18 @@ class MethodBox():
 
         return output
 
-    def to_jst_from_utc(self, iso8601):
-        d = datetime.datetime.fromisoformat(iso8601.replace("Z", "+00:00"))
-        d += datetime.timedelta(hours=9)
-        return d
+    def make_output_count_today_push_events(self):
+        num = self.count_today_push_events()
+        output = ""
+        if num == 0:
+            output = "本日はまだギットハブに、コードがコミットされていません"
+        else:
+            output = "本日は" + str(num) + "件、コミットされています"
+        return output
 
 
 if __name__ == "__main__":
-    countTodayPushEvents = MethodBox()
-    publicEventsForUser = countTodayPushEvents.get_public_events_for_a_user("koyamal")
-    numTodayPushEvents = countTodayPushEvents.count_today_push_events(publicEventsForUser)
+    method = MethodBox("koyamal")
+    speak_output = method.make_output_count_today_push_events()
 
-    print(numTodayPushEvents)
+    print(speak_output)
