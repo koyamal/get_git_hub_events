@@ -27,7 +27,7 @@ class MethodBox:
 
     def count_today_push_events(self):
         events = self.get_public_events_for_a_user()
-        today = datetime.datetime.today()
+        today = datetime.datetime.utcnow() + datetime.timedelta(hours=9)
         output = 0
         for event in events:
             if event["type"] == "PushEvent":
