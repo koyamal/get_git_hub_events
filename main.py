@@ -18,6 +18,8 @@ class MethodBox:
         response = requests.get(url, headers=headers)
         data = response.json()
 
+        #print(data)
+
         return data
 
     def to_jst_from_utc(self, iso8601):
